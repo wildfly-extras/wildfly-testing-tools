@@ -18,7 +18,7 @@
 
     <properties>
         <!-- Project dependencies -->
-        <version.org.jboss.logging.jboss-logging>3.6.1.Final</version.org.jboss.logging.jboss-logging>
+        <version.org.jboss.logging.jboss-logging>3.6.2.Final</version.org.jboss.logging.jboss-logging>
         <version.org.jboss.shrinkwrap.shrinkwrap>1.2.6</version.org.jboss.shrinkwrap.shrinkwrap>
         <version.org.jsoup>1.22.1</version.org.jsoup>
         <version.org.junit>6.0.2</version.org.junit>
