@@ -43,7 +43,7 @@ jobs:
       - name: Build JavaDoc and Documentation
         run: |
           # Generate aggregated JavaDoc
-          mvn -B -ntp clean javadoc:aggregate -Prelease
+          mvn -B -ntp clean javadoc:aggregate -Pcentral-release
           # Build AsciiDoc documentation
           mvn -B -ntp process-resources -pl docs
 
