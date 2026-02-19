@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
-        <version>51</version>
+        <version>52</version>
         <relativePath />
     </parent>
 
@@ -35,6 +35,7 @@
     <properties>
         <!-- Override the release version -->
         <maven.compiler.release>17</maven.compiler.release>
+        <jdk.min.version>${maven.compiler.release}</jdk.min.version>
         <version.org.kohsuke.metainf-services>1.11</version.org.kohsuke.metainf-services>
         <!-- Used to override the provisioned version of WildFly. Defaults to empty which is the latest from the channel. -->
         <version.org.wildfly />
@@ -74,7 +75,7 @@
 
         <!-- maven-release-plugin configuration -->
         <autoVersionSubmodules>true</autoVersionSubmodules>
-        <releaseProfiles>release</releaseProfiles>
+        <releaseProfiles>central-release</releaseProfiles>
         <signTag>true</signTag>
         <tagNameFormat>v@{project.version}</tagNameFormat>
         <arguments>-DskipTests</arguments>
@@ -83,10 +84,12 @@
         <!-- Use the local directory when using perform -->
         <localCheckout>true</localCheckout>
         <!-- Maven Central properties -->
-        <repo.sonatype.url>https://central.sonatype.com</repo.sonatype.url>
-        <sonatype.server.id>central</sonatype.server.id>
-        <autoPublish>true</autoPublish>
-        <waitUntil>validated</waitUntil>
+        <central.sonatype.url>https://central.sonatype.com</central.sonatype.url>
+        <central.serverId>central</central.serverId>
+        <central.deploymentName>${project.artifactId}-${project.version}</central.deploymentName>
+        <central.autoPublish>true</central.autoPublish>
+        <central.waitUntil>validated</central.waitUntil>
+        <central.skipPublishing>false</central.skipPublishing>
     </properties>
     <url>https://www.wildfly.org</url>
 
@@ -335,28 +338,22 @@
             </build>
         </profile>
         <profile>
-            <id>release</id>
-            <activation>
-                <property>
-                    <name>release</name>
-                </property>
-            </activation>
+            <id>central-release</id>
 
             <distributionManagement>
                 <snapshotRepository>
-                    <id>${sonatype.server.id}</id>
-                    <url>${repo.sonatype.url}</url>
+                    <id>${central.serverId}</id>
+                    <url>${central.sonatype.url}</url>
                 </snapshotRepository>
                 <repository>
-                    <id>${sonatype.server.id}</id>
-                    <url>${repo.sonatype.url}</url>
+                    <id>${central.serverId}</id>
+                    <url>${central.sonatype.url}</url>
                 </repository>
             </distributionManagement>
 
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
                         <executions>
                             <execution>
@@ -368,7 +365,6 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <executions>
                             <execution>
@@ -387,7 +383,6 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
                         <executions>
                             <execution>
@@ -405,10 +400,11 @@
                         <version>${version.central.publishing.maven.plugin}</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <publishingServerId>${sonatype.server.id}</publishingServerId>
-                            <autoPublish>${autoPublish}</autoPublish>
-                            <waitUntil>${waitUntil}</waitUntil>
-                            <deploymentName>${project.groupId}-${project.artifactId}-${project.version}</deploymentName>
+                            <publishingServerId>${central.serverId}</publishingServerId>
+                            <autoPublish>${central.autoPublish}</autoPublish>
+                            <waitUntil>${central.waitUntil}</waitUntil>
+                            <deploymentName>${central.deploymentName}</deploymentName>
+                            <skipPublishing>${central.skipPublishing}</skipPublishing>
                         </configuration>
                     </plugin>
                 </plugins>
