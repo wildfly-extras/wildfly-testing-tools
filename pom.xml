@@ -67,7 +67,10 @@
 
         <jboss.home>${project.build.directory}${file.separator}wildfly</jboss.home>
         <test.class.path>${project.build.testOutputDirectory}</test.class.path>
+        <test.java.home>${java.home}</test.java.home>
         <test.jvm.args>-Dmaven.repo.local=${settings.localRepository}</test.jvm.args>
+        <surefire.reportsDirectory>{project.build.directory}/surefire-reports</surefire.reportsDirectory>
+        <failsafe.reportsDirectory>{project.build.directory}/failsafe-reports</failsafe.reportsDirectory>
 
         <!-- maven-release-plugin configuration -->
         <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -118,6 +121,24 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <jvm>${test.java.home}${file.separator}bin${file.separator}java</jvm>
+                        <reportsDirectory>${surefire.reportsDirectory}</reportsDirectory>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <jvm>${test.java.home}${file.separator}bin${file.separator}java</jvm>
+                        <reportsDirectory>${failsafe.reportsDirectory}</reportsDirectory>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
