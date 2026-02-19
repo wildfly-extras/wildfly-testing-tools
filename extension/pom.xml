@@ -115,7 +115,7 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
-                            <excludedGroups>domain</excludedGroups>
+                            <excludedGroups>wildfly-domain</excludedGroups>
                         </configuration>
                     </execution>
                     <execution>
@@ -125,7 +125,7 @@
                             <goal>verify</goal>
                         </goals>
                         <configuration>
-                            <groups>domain</groups>
+                            <groups>wildfly-domain</groups>
                         </configuration>
                     </execution>
                 </executions>

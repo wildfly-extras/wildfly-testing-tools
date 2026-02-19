@@ -19,7 +19,7 @@ import org.wildfly.plugin.tools.server.ServerManager;
  * Indicates a test is a manual mode test. Meaning the test itself is responsible for the lifecycle of the server. If
  * {@linkplain #value() auto-start} is set to {@code true}, the server will start at the beginning of the test.
  * <p>
- * Manual mode tests are automatically tagged with {@code "manual"} to allow selective test execution.
+ * Manual mode tests are automatically tagged with {@code "wildfly-manual"} to allow selective test execution.
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
  */
@@ -27,7 +27,7 @@ import org.wildfly.plugin.tools.server.ServerManager;
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Tag("manual")
+@Tag("wildfly-manual")
 public @interface ManualMode {
 
     /**

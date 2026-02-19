@@ -50,11 +50,11 @@ jobs:
       - name: Build and Test on ${{ matrix.os }} - 25 with WildFly ${{steps.wildfly-nightly.outputs.wildfly-version}}
         run: ${{ env.MVN_CMD }} clean verify '-Dversion.org.wildfly=${{steps.wildfly-nightly.outputs.wildfly-version}}'
       - name: Build and Test on ${{ matrix.os }} - 26 with WildFly ${{steps.wildfly-nightly.outputs.wildfly-version}}
-        run: ${{ env.MVN_CMD }} verify '-Dversion.org.wildfly=${{steps.wildfly-nightly.outputs.wildfly-version}}' '-Dtest.java.home=${{env.JAVA_HOME_26_X64}}${{env.JAVA_HOME_26_ARM64}}' '-Dsurefire.reportsDirectory=${project.build.directory}/surefire-reports-java26' '-Dfailsafe.reportsDirectory=${project.build.directory}/failsafe-reports-java26'
+        run: ${{ env.MVN_CMD }} verify '-Dversion.org.wildfly=${{steps.wildfly-nightly.outputs.wildfly-version}}' '-Dtest.java.home=${{env.JAVA_HOME_26_X64}}${{env.JAVA_HOME_26_ARM64}}' '-Dsurefire.reportsDirectory=target/surefire-reports-java26' '-Dfailsafe.reportsDirectory=target/failsafe-reports-java26'
       - name: Build and Test on ${{ matrix.os }} - 21 with WildFly ${{steps.wildfly-nightly.outputs.wildfly-version}}
-        run: ${{ env.MVN_CMD }} verify '-Dversion.org.wildfly=${{steps.wildfly-nightly.outputs.wildfly-version}}' '-Dtest.java.home=${{env.JAVA_HOME_21_X64}}${{env.JAVA_HOME_21_ARM64}}' '-Dsurefire.reportsDirectory=${project.build.directory}/surefire-reports-java21' '-Dfailsafe.reportsDirectory=${project.build.directory}/failsafe-reports-java21'
+        run: ${{ env.MVN_CMD }} verify '-Dversion.org.wildfly=${{steps.wildfly-nightly.outputs.wildfly-version}}' '-Dtest.java.home=${{env.JAVA_HOME_21_X64}}${{env.JAVA_HOME_21_ARM64}}' '-Dsurefire.reportsDirectory=target/surefire-reports-java21' '-Dfailsafe.reportsDirectory=target/failsafe-reports-java21'
       - name: Build and Test on ${{ matrix.os }} - 17 with WildFly ${{steps.wildfly-nightly.outputs.wildfly-version}}
-        run: ${{ env.MVN_CMD }} verify '-Dversion.org.wildfly=${{steps.wildfly-nightly.outputs.wildfly-version}}' '-Dtest.java.home=${{env.JAVA_HOME_17_X64}}${{env.JAVA_HOME_17_ARM64}}' '-Dsurefire.reportsDirectory=${project.build.directory}/surefire-reports-java17' '-Dfailsafe.reportsDirectory=${project.build.directory}/failsafe-reports-java17'
+        run: ${{ env.MVN_CMD }} verify '-Dversion.org.wildfly=${{steps.wildfly-nightly.outputs.wildfly-version}}' '-Dtest.java.home=${{env.JAVA_HOME_17_X64}}${{env.JAVA_HOME_17_ARM64}}' '-Dsurefire.reportsDirectory=target/surefire-reports-java17' '-Dfailsafe.reportsDirectory=target/failsafe-reports-java17'
       - name: Upload test logs for failed run
         uses: actions/upload-artifact@v6
         if: failure()

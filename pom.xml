@@ -70,8 +70,8 @@
         <test.class.path>${project.build.testOutputDirectory}</test.class.path>
         <test.java.home>${java.home}</test.java.home>
         <test.jvm.args>-Dmaven.repo.local=${settings.localRepository}</test.jvm.args>
-        <surefire.reportsDirectory>{project.build.directory}/surefire-reports</surefire.reportsDirectory>
-        <failsafe.reportsDirectory>{project.build.directory}/failsafe-reports</failsafe.reportsDirectory>
+        <surefire.reportsDirectory>${project.build.directory}/surefire-reports</surefire.reportsDirectory>
+        <failsafe.reportsDirectory>${project.build.directory}/failsafe-reports</failsafe.reportsDirectory>
 
         <!-- maven-release-plugin configuration -->
         <autoVersionSubmodules>true</autoVersionSubmodules>

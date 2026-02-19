@@ -85,28 +85,28 @@ public class MyTest {
 
 Tests are automatically tagged to allow selective execution:
 
-* `@WildFlyTest` - tagged with `standalone`
-* `@WildFlyDomainTest` - tagged with `domain`
-* `@ManualMode` - tagged with `manual`
+* `@WildFlyTest` - tagged with `wildfly-standalone`
+* `@WildFlyDomainTest` - tagged with `wildfly-domain`
+* `@ManualMode` - tagged with `wildfly-manual`
 
 Examples:
 
 [source,bash]
 ----
 # Run only standalone tests
-mvn test -Dgroups=standalone
+mvn test -Dgroups=wildfly-standalone
 
 # Run only domain tests
-mvn test -Dgroups=domain
+mvn test -Dgroups=wildfly-domain
 
 # Run only manual mode tests
-mvn test -Dgroups=manual
+mvn test -Dgroups=wildfly-manual
 
 # Run standalone automatic mode tests (not manual)
-mvn test -Dgroups='standalone & !manual'
+mvn test -Dgroups=wildfly-standalone -DexcludedGroups=wildfly-manual
 
 # Run all non-domain tests
-mvn test -Dgroups='!domain'
+mvn test -DexcludedGroups=wildfly-domain
 ----
 
 == Creating Deployments
@@ -298,7 +298,7 @@ To use domain mode testing:
    - `@ServerGroup("server-group-name")` on the deployment method (you can specify multiple server groups: `@ServerGroup({"group1", "group2"})`)
    - `@DomainServer("server-name")` on `@ServerResource` fields to target specific servers
 
-NOTE: Domain tests are automatically tagged with `@Tag("domain")`. You can use this to run domain tests separately: `mvn test -Dgroups=domain`
+NOTE: Domain tests are automatically tagged with `@Tag("wildfly-domain")`. You can use this to run domain tests separately: `mvn test -Dgroups=wildfly-domain`
 
 == ServerManager API
 
@@ -812,6 +812,9 @@ public class SnapshotTest {
 
 * Group tests by deployment requirements
 * Use `@Tag` annotations to categorize tests (e.g., domain tests, manual mode tests)
+    ** `@WildFlyTest` has a tag with the value "wildfly-standalone"
+    ** `@WildFlyDomainTest` has a tag with the value "wildfly-domain"
+    ** `@ManualMode` has a tag with the value "wildfly-manual"
 * Keep test deployments small and focused
 
 === Debugging
