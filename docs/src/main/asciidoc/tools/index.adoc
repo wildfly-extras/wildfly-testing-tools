@@ -182,15 +182,14 @@ moduleDescription.close();
 @WildFlyTest
 public class ModuleTest {
 
-    @DeploymentProducer
-    public static WebArchive createDeployment() {
+    @GenerateDeployment
+    public static void createDeployment(final WebArchive deployment) {
         Asset deploymentStructure = DeploymentDescriptors.createJBossDeploymentStructure(
             Set.of("com.example.mymodule"),
             Set.of()
         );
 
-        return ShrinkWrap.create(WebArchive.class)
-                .addClass(MyClass.class)
+        deployment.addClass(MyClass.class)
                 .addAsManifestResource(deploymentStructure, "jboss-deployment-structure.xml");
     }
 

@@ -94,10 +94,9 @@ mvn test -Dwildfly.http.host=localhost -Dwildfly.http.port=8080
 +
 [source,java]
 ----
-@DeploymentProducer
-public static WebArchive deployment() {
-    return ShrinkWrap.create(WebArchive.class)
-            .addClass(MyClass.class)
+@GenerateDeployment
+public static void deployment(final WebArchive deployment) {
+    deployment.addClass(MyClass.class)
             .addPackage("com.example.mypackage")
             .addAsLibrary(new File("path/to/library.jar"));
 }
@@ -291,10 +290,10 @@ Verify the server group name on your deployment method matches your domain confi
 +
 [source,java]
 ----
-@DeploymentProducer
+@GenerateDeployment
 @ServerGroup("main-server-group")  // Must match domain.xml
-public static WebArchive deployment() {
-    return ShrinkWrap.create(WebArchive.class);
+public static void deployment(final WebArchive deployment) {
+    deployment.addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
 }
 ----
 

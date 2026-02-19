@@ -191,10 +191,9 @@ The API works seamlessly with the link:../extension/[WildFly JUnit Extension]:
 @RequiresModule("org.jboss.as.ejb3")
 public class WildFlyEjbTest {
 
-    @DeploymentProducer
-    public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
-                .addClass(MyBean.class);
+    @GenerateDeployment
+    public static void createDeployment(final WebArchive deployment) {
+        deployment.addClass(MyBean.class);
     }
 
     @Test
