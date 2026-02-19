@@ -29,17 +29,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.wildfly.testing.junit.extension.annotation.DeploymentProducer;
+import org.wildfly.testing.junit.extension.annotation.GenerateDeployment;
 import org.wildfly.testing.junit.extension.annotation.ServerResource;
 import org.wildfly.testing.junit.extension.annotation.WildFlyTest;
 
 @WildFlyTest
 public class RestApiTest {
 
-    @DeploymentProducer
-    public static WebArchive deployment() {
-        return ShrinkWrap.create(WebArchive.class, "rest-test.war")
-                .addClasses(RestApplication.class, UserResource.class, User.class)
+    @GenerateDeployment
+    public static void deployment(final WebArchive deployment) {
+        deployment.addClasses(RestApplication.class, UserResource.class, User.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
@@ -152,17 +151,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.wildfly.testing.junit.extension.annotation.DeploymentProducer;
+import org.wildfly.testing.junit.extension.annotation.GenerateDeployment;
 import org.wildfly.testing.junit.extension.annotation.ServerResource;
 import org.wildfly.testing.junit.extension.annotation.WildFlyTest;
 
 @WildFlyTest
 public class JpaTest {
 
-    @DeploymentProducer
-    public static WebArchive deployment() {
-        return ShrinkWrap.create(WebArchive.class, "jpa-test.war")
-                .addClasses(Product.class, ProductService.class, ProductResource.class)
+    @GenerateDeployment
+    public static void deployment(final WebArchive deployment) {
+        deployment.addClasses(Product.class, ProductService.class, ProductResource.class)
                 .addAsManifestResource(createPersistenceXml(), "persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
@@ -305,7 +303,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.wildfly.testing.junit.extension.annotation.DeploymentProducer;
+import org.wildfly.testing.junit.extension.annotation.GenerateDeployment;
 import org.wildfly.testing.junit.extension.annotation.ServerResource;
 import org.wildfly.testing.junit.extension.annotation.WildFlyTest;
 import org.wildfly.testing.tools.deployment.DeploymentDescriptors;
@@ -313,10 +311,9 @@ import org.wildfly.testing.tools.deployment.DeploymentDescriptors;
 @WildFlyTest
 public class SecurityTest {
 
-    @DeploymentProducer
-    public static WebArchive deployment() {
-        return ShrinkWrap.create(WebArchive.class, "security-test.war")
-                .addClasses(SecuredResource.class)
+    @GenerateDeployment
+    public static void deployment(final WebArchive deployment) {
+        deployment.addClasses(SecuredResource.class)
                 .addAsWebInfResource(createWebXml(), "web.xml")
                 .addAsWebInfResource(
                         DeploymentDescriptors.createJBossWebSecurityDomain("other"),
@@ -438,7 +435,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.wildfly.testing.junit.extension.annotation.DeploymentProducer;
+import org.wildfly.testing.junit.extension.annotation.GenerateDeployment;
 import org.wildfly.testing.junit.extension.annotation.ServerResource;
 import org.wildfly.testing.junit.annotation.RequiresModule;
 import org.wildfly.testing.junit.extension.annotation.WildFlyTest;
@@ -447,10 +444,9 @@ import org.wildfly.testing.junit.extension.annotation.WildFlyTest;
 @RequiresModule("org.jboss.as.ejb3")
 public class EjbTest {
 
-    @DeploymentProducer
-    public static WebArchive deployment() {
-        return ShrinkWrap.create(WebArchive.class, "ejb-test.war")
-                .addClasses(CalculatorService.class, CalculatorResource.class)
+    @GenerateDeployment
+    public static void deployment(final WebArchive deployment) {
+        deployment.addClasses(CalculatorService.class, CalculatorResource.class)
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
@@ -527,7 +523,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.wildfly.testing.junit.extension.annotation.DeploymentProducer;
+import org.wildfly.testing.junit.extension.annotation.GenerateDeployment;
 import org.wildfly.testing.junit.extension.annotation.JBossHome;
 import org.wildfly.testing.junit.extension.annotation.ManualMode;
 import org.wildfly.testing.junit.extension.annotation.ServerResource;
@@ -565,10 +561,9 @@ public class CustomModuleTest {
         }
     }
 
-    @DeploymentProducer
-    public static WebArchive deployment() {
-        return ShrinkWrap.create(WebArchive.class, "custom-module-test.war")
-                .addClass(MyService.class)
+    @GenerateDeployment
+    public static void deployment(final WebArchive deployment) {
+        deployment.addClass(MyService.class)
                 .addAsManifestResource(
                         DeploymentDescriptors.createJBossDeploymentStructure(
                                 java.util.Set.of("com.example.custom"),

@@ -49,10 +49,9 @@ Add the extension module to your test dependencies:
 @WildFlyTest
 public class HelloWorldTest {
 
-    @DeploymentProducer
-    public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
-                .addClass(HelloServlet.class);
+    @GenerateDeployment
+    public static void createDeployment(final WebArchive deployment) {
+        deployment.addClass(HelloServlet.class);
     }
 
     @Test
