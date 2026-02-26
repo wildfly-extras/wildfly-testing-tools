@@ -56,7 +56,7 @@ jobs:
       - name: Build and Test on ${{ matrix.os }} - 17 with WildFly ${{steps.wildfly-nightly.outputs.wildfly-version}}
         run: ${{ env.MVN_CMD }} verify '-Dversion.org.wildfly=${{steps.wildfly-nightly.outputs.wildfly-version}}' '-Dtest.java.home=${{env.JAVA_HOME_17_X64}}${{env.JAVA_HOME_17_ARM64}}' '-Dsurefire.reportsDirectory=target/surefire-reports-java17' '-Dfailsafe.reportsDirectory=target/failsafe-reports-java17'
       - name: Upload test logs for failed run
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: test-reports-${{ matrix.os }}
