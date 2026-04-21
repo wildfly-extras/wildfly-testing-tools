@@ -18,7 +18,9 @@
 
     <properties>
         <!-- Project dependencies -->
+        <version.jakarta.platform>10.0.0</version.jakarta.platform>
         <version.org.jboss.logging.jboss-logging>3.6.3.Final</version.org.jboss.logging.jboss-logging>
+        <version.org.jboss.resteasy>6.2.14.Final</version.org.jboss.resteasy>
         <version.org.jboss.shrinkwrap.shrinkwrap>1.2.6</version.org.jboss.shrinkwrap.shrinkwrap>
         <version.org.jsoup>1.22.2</version.org.jsoup>
         <version.org.junit>6.0.3</version.org.junit>
@@ -40,7 +42,7 @@
             <dependency>
                 <groupId>jakarta.platform</groupId>
                 <artifactId>jakarta.jakartaee-bom</artifactId>
-                <version>10.0.0</version>
+                <version>${version.jakarta.platform}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -52,7 +54,7 @@
             <dependency>
                 <groupId>org.jboss.resteasy</groupId>
                 <artifactId>resteasy-bom</artifactId>
-                <version>6.2.14.Final</version>
+                <version>${version.org.jboss.resteasy}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -70,7 +72,7 @@
             <dependency>
                 <groupId>org.jboss.shrinkwrap</groupId>
                 <artifactId>shrinkwrap-depchain</artifactId>
-                <version>1.2.6</version>
+                <version>${version.org.jboss.shrinkwrap.shrinkwrap}</version>
                 <type>pom</type>
             </dependency>
         </dependencies>
