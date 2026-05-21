@@ -33,6 +33,7 @@ import org.wildfly.plugin.tools.server.DomainConfiguration;
  * <li>{@code wildfly.java.home} - Java home to use for the server</li>
  * <li>{@code wildfly.module.path} - Module path for the server</li>
  * <li>{@code wildfly.java.opts} - Additional JVM arguments for the server</li>
+ * <li>{@code wildfly.server.args} - Additional server arguments (e.g., --stability=preview)</li>
  * <li>{@code wildfly.http.protocol} - HTTP protocol (http or https)</li>
  * <li>{@code wildfly.http.port} - HTTP/HTTPS port</li>
  * </ul>
@@ -69,6 +70,9 @@ public class DomainConfigurationFactory {
             commandBuilder.addHostControllerJavaOptions(javaOpts);
             commandBuilder.addProcessControllerJavaOptions(javaOpts);
         });
+
+        context.getConfigurationParameter("wildfly.server.args")
+                .ifPresent(value -> commandBuilder.addServerArguments(ServerConfiguration.splitArguments(value)));
 
         if (portOpt.isPresent()) {
             final int port = portOpt.get();

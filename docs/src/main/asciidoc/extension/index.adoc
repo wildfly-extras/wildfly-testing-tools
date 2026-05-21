@@ -421,6 +421,11 @@ This chapter covers all configuration options for {project-name}.
 |Additional JVM arguments for WildFly
 |None
 
+|`wildfly.server.args`
+|String
+|Arguments to pass as server arguments, e.g. `--stability=preview`
+|None
+
 |`wildfly.debug`
 |boolean
 |An empty value or a value of `true` indicates the server should be started up with remote debugging enabled. +
@@ -480,6 +485,21 @@ mvn test -Dwildfly.java.opts="-Xmx1024m -XX:+UseG1GC"
 
 # Options with commas or complex values (use quotes)
 mvn test -Dwildfly.java.opts="\"-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8787\""
+----
+
+=== Server Arguments
+
+`wildfly.server.args`::
+Arguments to pass the server when starting the process. Multiple arguments can be space-separated. Use quotes for
+arguments containing spaces or special characters.
++
+[source,bash]
+----
+# Single option
+mvn test -Dwildfly.server.args="--stability=preview"
+
+# Multiple options
+mvn test -Dwildfly.server.args="--stability=preview --server-config=standalone-full.xml"
 ----
 
 === Module Path
