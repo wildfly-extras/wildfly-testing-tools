@@ -203,6 +203,37 @@ fi
 # "${CMD[@]}" expands the array respecting spaces within arguments
 "${CMD[@]}"
 
+SCM_URL=$("${MVN}" help:evaluate -Dexpression=project.scm.developerConnection -q -DforceStdout "${MAVEN_ARGS[@]}")
+# Strip the scm:git: prefix if present
+SCM_URL="${SCM_URL#scm:git:}"
+
+# Find matching remote
+GIT_REMOTE=""
+while IFS=$'\t' read -r remote_name remote_url; do
+    if [[ "${remote_url}" == *"${SCM_URL}"* ]] || [[ "${SCM_URL}" == *"${remote_url}"* ]]; then
+        GIT_REMOTE="${remote_name}"
+        break
+    fi
+done < <(git remote -v | grep "(push)" | awk '{print $1"\t"$2}')
+
+if [ -z "${GIT_REMOTE}" ]; then
+    failNoHelp "Could not find a git remote matching SCM URL: ${SCM_URL}"
+fi
+
+# Get the current branch name
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+# Push changes to remote (skipped during dry-run)
+if ! ${DRY_RUN}; then
+    if ${VERBOSE}; then
+        printf "Pushing to remote '%s' branch '%s' (matched from SCM URL: %s)\n" "${GIT_REMOTE}" "${CURRENT_BRANCH}" "${SCM_URL}"
+    fi
+
+    git push "${GIT_REMOTE}" "${CURRENT_BRANCH}" --follow-tags
+else
+    printf "${YELLOW}Dry run would execute:${CLEAR}\ngit push %s %s --follow-tags\n" "${GIT_REMOTE}" "${CURRENT_BRANCH}"
+fi
+
 # GitHub Release Handling
 
 if command -v gh &>/dev/null; then
