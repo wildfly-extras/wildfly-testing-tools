@@ -15,7 +15,7 @@
 
     <groupId>org.wildfly.testing</groupId>
     <artifactId>wildfly-testing-tools-parent</artifactId>
-    <version>1.0.0.Alpha5-SNAPSHOT</version>
+    <version>1.0.0.Alpha4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WildFly Testing Tools Parent</name>
 
