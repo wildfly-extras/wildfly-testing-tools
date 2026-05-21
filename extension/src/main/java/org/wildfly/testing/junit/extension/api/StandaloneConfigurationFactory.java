@@ -33,6 +33,7 @@ import org.wildfly.plugin.tools.server.StandaloneConfiguration;
  * <li>{@code wildfly.java.home} - Java home to use for the server</li>
  * <li>{@code wildfly.module.path} - Module path for the server</li>
  * <li>{@code wildfly.java.opts} - Additional JVM arguments for the server</li>
+ * <li>{@code wildfly.server.args} - Additional server arguments (e.g., --stability=preview)</li>
  * <li>{@code wildfly.http.protocol} - HTTP protocol (http or https)</li>
  * <li>{@code wildfly.http.port} - HTTP/HTTPS port</li>
  * <li>{@code wildfly.debug} - Enable remote debugging (true if empty or "true")</li>
@@ -66,6 +67,9 @@ public class StandaloneConfigurationFactory {
 
         context.getConfigurationParameter("wildfly.java.opts")
                 .ifPresent(value -> commandBuilder.addJavaOptions(ServerConfiguration.splitArguments(value)));
+
+        context.getConfigurationParameter("wildfly.server.args")
+                .ifPresent(value -> commandBuilder.addServerArguments(ServerConfiguration.splitArguments(value)));
 
         final var protocolOpt = context.getConfigurationParameter(ServerConfiguration.PROTOCOL_PROPERTY);
         final var portOpt = context.getConfigurationParameter(ServerConfiguration.PORT_PROPERTY, Integer::parseInt);
