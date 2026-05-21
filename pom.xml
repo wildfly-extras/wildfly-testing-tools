@@ -37,6 +37,7 @@
         <maven.compiler.release>17</maven.compiler.release>
         <jdk.min.version>${maven.compiler.release}</jdk.min.version>
         <version.org.kohsuke.metainf-services>1.11</version.org.kohsuke.metainf-services>
+        <version.org.junit>6.1.0</version.org.junit>
         <!-- Used to override the provisioned version of WildFly. Defaults to empty which is the latest from the channel. -->
         <version.org.wildfly />
 
@@ -195,8 +196,8 @@
 
                     <!-- Link to Java SE API docs -->
                     <links>
-                        <link>https://docs.oracle.com/en/java/javase/17/docs/api/</link>
-                        <link>https://junit.org/junit5/docs/current/api/</link>
+                        <link>https://docs.oracle.com/en/java/javase/${maven.compiler.release}/docs/api/</link>
+                        <link>https://docs.junit.org/${version.org.junit}/api/ </link>
                         <link>https://docs.wildfly.org/wildfly-plugin-tools/</link>
                     </links>
                 </configuration>
