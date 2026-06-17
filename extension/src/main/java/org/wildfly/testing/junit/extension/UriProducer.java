@@ -47,7 +47,7 @@ public class UriProducer implements ServerResourceProducer {
                     "Type %s is not assignable to %s".formatted(clazz.getName(), URI.class.getName()));
         }
 
-        final Optional<ServerManager> opt = WildFlyExtension.getServer(context);
+        final Optional<ServerManager> opt = ServerContext.getServer(context);
         if (opt.isEmpty()) {
             // Shouldn't happen, but we have no server so we can't resolve anything
             return URI.create(ServerConfiguration.resolveBaseUri(context));

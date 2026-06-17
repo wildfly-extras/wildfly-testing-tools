@@ -33,8 +33,8 @@ public class ServerManagerProducer implements ServerResourceProducer {
                     "Type %s is not assignable to %s".formatted(clazz.getName(), ServerManager.class.getName()));
         }
 
-        // Get the server from WildFlyExtension and return as managed which will not allow shutting down the server
-        return WildFlyExtension.getServer(context)
+        // Get the server from ServerContext and return as managed which will not allow shutting down the server
+        return ServerContext.getServer(context)
                 .map(serverManager -> (TestSupport.isManualMode(context) ? serverManager : serverManager.asManaged()))
                 .orElse(null);
     }
