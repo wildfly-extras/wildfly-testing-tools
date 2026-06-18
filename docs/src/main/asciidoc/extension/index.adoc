@@ -55,8 +55,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void testHello(@ServerResource URI uri) throws Exception {
-        HttpClient client = HttpClient.newHttpClient();
+    public void testHello(@ServerResource final URI uri, @ServerResource final HttpClient client) throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri.resolve("hello"))
                 .build();
@@ -193,9 +192,159 @@ public class ResourceTest {
 * `java.net.URI` - HTTP URI to deployed application
 * `org.jboss.as.controller.client.ModelControllerClient` - A client which can talk to the management endpoint of the server
 * `org.wildfly.plugin.tools.DeploymentManager` - A deployment manager to deploy archives to the server
+* `java.net.http.HttpClient` - An HTTP client which can be used to communicate with the server.
+* `jakarta.ws.rs.client.Client` - A REST client which can be used to make REST requests to a server.
+* `jakarta.ws.rs.client.WebTarget` - A resource target which can be used to make REST requests to the deployed application.
 
 IMPORTANT: When injecting a `ServerManager` the `start()` and `shutdown()` methods will throw an exception if the test
 is not a <<manualmode>>[`@ManualMode`] test.
+
+==== Choosing an HTTP Client
+
+The extension provides three HTTP client options. Choose based on your testing needs:
+
+* **`HttpClient`**
+  - Standard Java HTTP client (no extra dependencies)
+  - Good for simple HTTP requests and non-REST endpoints
+  - Requires manual URI construction
++
+[source,java]
+----
+@ServerResource
+private HttpClient client;
+
+@ServerResource
+private URI baseUri;
+
+@Test
+void test() {
+    HttpRequest request = HttpRequest.newBuilder(baseUri.resolve("/api/users")).GET().build();
+    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+}
+----
+
+* **`WebTarget`**
+  - Pre-configured with deployment URI
+  - Use with `@RequestPath` for clean, declarative endpoint definitions
+  - Built-in JSON/XML support via JAX-RS
++
+[source,java]
+----
+@ServerResource
+@RequestPath("/api/users")
+private WebTarget usersTarget;
+
+@Test
+void test() {
+    try (Response response = usersTarget.request().get()) {
+        User[] users = response.readEntity(User[].class);
+    }
+}
+----
+
+* **`Client`**
+  - Use when you need to create multiple targets dynamically
+  - Useful for custom client configuration (filters, interceptors, etc.)
++
+[source,java]
+----
+@ServerResource
+private Client client;
+
+@ServerResource
+private URI baseUri;
+
+@Test
+void test() {
+    WebTarget target = client.target(baseUri).path("api/users");
+    try (Response response = target.request().get()) {
+        // ...
+    }
+}
+----
+
+=== @RequestPath Qualifier
+
+The `@RequestPath` annotation qualifies URI or WebTarget injection points with a path relative to the deployed application's base URI.
+The framework automatically handles slash normalization, so both `@RequestPath("/api")` and `@RequestPath("api")` work correctly.
+
+[source,java]
+----
+@WildFlyTest
+public class OrderServiceTest {
+
+    @GenerateDeployment
+    public static void createDeployment(final WebArchive deployment) {
+        deployment.addClass(OrderResource.class);
+    }
+
+    // URI injection with path
+    @ServerResource
+    @RequestPath("/api/orders")
+    private URI ordersUri;
+
+    // WebTarget injection with path - pre-configured and ready to use
+    @ServerResource
+    @RequestPath("/api/orders")
+    private WebTarget ordersTarget;
+
+    @Test
+    public void testGetOrders() throws Exception {
+        // ordersUri points to: http://localhost:8080/OrderServiceTest/api/orders
+        // ordersTarget is a pre-configured WebTarget for the same URI
+
+        try (Response response = ordersTarget.request().get()) {
+            Assertions.assertEquals(200, response.getStatus());
+        }
+    }
+
+    @Test
+    public void testWithParameter(
+            @ServerResource @RequestPath("/api/orders/123") URI orderUri) {
+        // Parameter injection also works with @RequestPath
+        // orderUri: http://localhost:8080/OrderServiceTest/api/orders/123
+
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder(orderUri).GET().build();
+        HttpResponse<String> response = client.send(request,
+                HttpResponse.BodyHandlers.ofString());
+        Assertions.assertEquals(200, response.statusCode());
+    }
+}
+----
+
+NOTE: Without a deployment, `@RequestPath` appends to the server's base URI (e.g., `http://localhost:8080/api`). This is useful for accessing management endpoints or server-level resources.
+
+==== Domain Mode
+
+In domain mode, combine `@RequestPath` with `@DomainServer` to target specific servers:
+
+[source,java]
+----
+@WildFlyDomainTest
+public class DomainOrderTest {
+
+    @DeploymentProducer
+    @ServerGroup("main-server-group")
+    public static WebArchive deployment() {
+        return ShrinkWrap.create(WebArchive.class)
+                .addClass(OrderResource.class);
+    }
+
+    @ServerResource
+    @DomainServer("server-one")
+    @RequestPath("/api/orders")
+    private WebTarget ordersTarget;
+
+    @Test
+    public void testDomainDeployment() {
+        // ordersTarget points to server-one's deployment
+        try (Response response = ordersTarget.request().get()) {
+            Assertions.assertEquals(200, response.getStatus());
+        }
+    }
+}
+----
 
 == Server Lifecycle
 

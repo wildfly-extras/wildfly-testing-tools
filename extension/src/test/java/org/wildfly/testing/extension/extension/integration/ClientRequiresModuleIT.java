@@ -12,11 +12,9 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriBuilder;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -25,6 +23,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.wildfly.testing.junit.annotation.RequiresModule;
 import org.wildfly.testing.junit.extension.annotation.DeploymentProducer;
+import org.wildfly.testing.junit.extension.annotation.RequestPath;
 import org.wildfly.testing.junit.extension.annotation.ServerResource;
 import org.wildfly.testing.junit.extension.annotation.WildFlyTest;
 
@@ -43,6 +42,10 @@ public class ClientRequiresModuleIT {
 
     @ServerResource
     private URI uri;
+
+    @ServerResource
+    @RequestPath("greeter")
+    private WebTarget webTarget;
 
     @RequiresModule("org.jboss.as.foo")
     @Test
@@ -71,12 +74,10 @@ public class ClientRequiresModuleIT {
     }
 
     private void makeRequest() {
-        try (Client client = ClientBuilder.newClient()) {
-            try (Response response = client.target(UriBuilder.fromUri(uri).path("/greeter")).request().get()) {
-                Assertions.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus(), () -> String
-                        .format("Response status code %d: %s", response.getStatus(), response.readEntity(String.class)));
-                Assertions.assertEquals("Hello!", response.readEntity(String.class));
-            }
+        try (Response response = webTarget.request().get()) {
+            Assertions.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus(), () -> String
+                    .format("Response status code %d: %s", response.getStatus(), response.readEntity(String.class)));
+            Assertions.assertEquals("Hello!", response.readEntity(String.class));
         }
     }
 

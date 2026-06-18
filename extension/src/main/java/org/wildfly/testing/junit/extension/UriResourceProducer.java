@@ -13,6 +13,9 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.WebTarget;
+
 import org.jboss.as.controller.client.helpers.Operations;
 import org.jboss.dmr.ModelNode;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -26,28 +29,33 @@ import org.wildfly.testing.junit.extension.api.ServerConfiguration;
 import org.wildfly.testing.junit.extension.api.ServerResourceProducer;
 
 /**
- * Produces {@link URI} instances for injection into test fields and parameters.
- * The URI is resolved from the deployed application's base URI, optionally
- * combined with a {@link RequestPath} qualifier.
+ * Produces {@link URI} and {@link WebTarget} instances for injection into test fields and parameters.
+ * The URI is resolved from the deployed application's base URI, optionally combined with a
+ * {@link RequestPath} qualifier.
+ * <p>
+ * For {@link WebTarget} injection, a pre-configured client target is created pointing to the
+ * resolved URI, ready for making REST requests without additional configuration.
+ * </p>
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
  */
 @MetaInfServices
-public class UriProducer implements ServerResourceProducer {
+public class UriResourceProducer implements ServerResourceProducer {
     @Override
     public boolean canInject(final ExtensionContext context, final Class<?> clazz, final Annotation... annotations) {
-        return URI.class.isAssignableFrom(clazz);
+        return URI.class.isAssignableFrom(clazz) || WebTarget.class.isAssignableFrom(clazz);
     }
 
     @Override
     public Object produce(final ExtensionContext context, final Class<?> clazz, final Annotation... annotations)
             throws IllegalArgumentException {
-        if (!URI.class.isAssignableFrom(clazz)) {
+        if (!URI.class.isAssignableFrom(clazz) && !WebTarget.class.isAssignableFrom(clazz)) {
             throw new IllegalArgumentException(
-                    "Type %s is not assignable to %s".formatted(clazz.getName(), URI.class.getName()));
+                    "Type %s is not assignable to %s or %s".formatted(clazz.getName(), URI.class.getName(),
+                            WebTarget.class.getName()));
         }
 
-        final Optional<ServerManager> opt = WildFlyExtension.getServer(context);
+        final Optional<ServerManager> opt = ServerContext.getServer(context);
         if (opt.isEmpty()) {
             // Shouldn't happen, but we have no server so we can't resolve anything
             return URI.create(ServerConfiguration.resolveBaseUri(context));
@@ -72,13 +80,19 @@ public class UriProducer implements ServerResourceProducer {
 
         final URI baseUri = DeploymentContext.computeIfAbsent(context, supplier);
 
+        URI resultUri = baseUri;
+
         // Check for RequestPath qualifier to append to base URI
         final RequestPath requestPath = findQualifier(RequestPath.class, annotations);
         if (requestPath != null) {
-            return createUri(baseUri, requestPath.value());
+            resultUri = createUri(baseUri, requestPath.value());
         }
 
-        return baseUri;
+        if (URI.class.isAssignableFrom(clazz)) {
+            return resultUri;
+        }
+        final Client client = ServerContext.getOrCreateClient(context);
+        return client.target(resultUri);
     }
 
     /**
