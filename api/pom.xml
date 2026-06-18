@@ -15,6 +15,7 @@
 
     <artifactId>wildfly-junit-api</artifactId>
     <name>WildFly JUnit API</name>
+    <description>JUnit annotations for conditional WildFly test execution and JBoss Home directory injection</description>
 
     <dependencyManagement>
         <dependencies>

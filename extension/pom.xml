@@ -15,6 +15,7 @@
 
     <artifactId>wildfly-junit-extension</artifactId>
     <name>WildFly JUnit Extension</name>
+    <description>JUnit extension providing automatic WildFly server lifecycle management, deployment handling, and resource injection</description>
 
     <dependencyManagement>
         <dependencies>
