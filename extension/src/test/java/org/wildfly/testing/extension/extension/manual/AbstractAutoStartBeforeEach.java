@@ -53,8 +53,7 @@ abstract class AbstractAutoStartBeforeEach implements ManualModeTest {
     }
 
     @Test
-    public void checkResponse() throws Exception {
-        final HttpClient client = HttpClient.newHttpClient();
+    public void checkResponse(@ServerResource final HttpClient client) throws Exception {
         final HttpRequest request = HttpRequest.newBuilder(getUri())
                 .GET()
                 .build();

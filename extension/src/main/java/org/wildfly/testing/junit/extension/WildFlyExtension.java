@@ -69,6 +69,9 @@ public class WildFlyExtension implements BeforeAllCallback, AfterAllCallback {
             // Deploy any deployments and cache the deployment information
             deploy(serverManager, context);
         } else {
+            final var listener = new ExtensionServerManagerListener(context, serverManager);
+            getClassStore(context).put(SERVER_LISTENER_KEY, listener);
+            serverManager.addServerManagerListener(listener);
             final var autoStart = manualMode.get().value();
             if (autoStart) {
                 if (!serverManager.isRunning()) {
@@ -84,9 +87,6 @@ public class WildFlyExtension implements BeforeAllCallback, AfterAllCallback {
                             .getName());
                     ServerContext.stopServer(context, serverManager);
                 }
-                final var listener = new ExtensionServerManagerListener(context, serverManager);
-                getClassStore(context).put(SERVER_LISTENER_KEY, listener);
-                serverManager.addServerManagerListener(listener);
             }
         }
     }
@@ -136,7 +136,7 @@ public class WildFlyExtension implements BeforeAllCallback, AfterAllCallback {
      * @throws JUnitException if deployment fails
      */
     private void deploy(final ServerManager serverManager, final ExtensionContext context) {
-        // Check if deployment already exists in cache (shouldn't happen, but be defensive)
+        // Check if deployment already exists in cache
         if (DeploymentContext.resolveDeployment(context).isPresent()) {
             return; // Already deployed
         }
@@ -279,6 +279,7 @@ public class WildFlyExtension implements BeforeAllCallback, AfterAllCallback {
                 return;
             }
             undeploy(context, serverManager, deploymentInfo.get());
+            ServerContext.shutdownContext(context);
         }
 
         @Override

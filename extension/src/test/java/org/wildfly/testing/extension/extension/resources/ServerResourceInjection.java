@@ -6,6 +6,10 @@
 package org.wildfly.testing.extension.extension.resources;
 
 import java.net.URI;
+import java.net.http.HttpClient;
+
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.WebTarget;
 
 import org.jboss.as.controller.client.ModelControllerClient;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +24,7 @@ import org.wildfly.testing.junit.extension.annotation.ServerResource;
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
  */
-class ServerResourceInjection {
+abstract class ServerResourceInjection {
 
     @ServerResource
     private static ModelControllerClient staticClient;
@@ -39,6 +43,19 @@ class ServerResourceInjection {
     private static ServerManager staticServerManager;
 
     @ServerResource
+    private static Client staticRestClient;
+
+    @ServerResource
+    private static HttpClient staticHttpClient;
+
+    @ServerResource
+    private static WebTarget staticBaseWebTarget;
+
+    @ServerResource
+    @RequestPath("/test")
+    private static WebTarget staticTestWebTarget;
+
+    @ServerResource
     private ModelControllerClient client;
 
     @ServerResource
@@ -53,6 +70,19 @@ class ServerResourceInjection {
 
     @ServerResource
     private ServerManager serverManager;
+
+    @ServerResource
+    private Client restClient;
+
+    @ServerResource
+    private HttpClient httpClient;
+
+    @ServerResource
+    private WebTarget baseWebTarget;
+
+    @ServerResource
+    @RequestPath("/test")
+    private WebTarget testWebTarget;
 
     @BeforeEach
     void clientBeforeEach(@ServerResource final ModelControllerClient client) {
@@ -163,5 +193,71 @@ class ServerResourceInjection {
     void serverManagerParameter(@ServerResource final ServerManager serverManager) {
         Assertions.assertNotNull(serverManager, "The ServerManager parameter should not be null");
         Assertions.assertTrue(serverManager.isRunning(), "The ServerManager should be running");
+    }
+
+    @Test
+    void staticRestClient() {
+        Assertions.assertNotNull(staticRestClient, "The static Client should not be null");
+    }
+
+    @Test
+    void restClient() {
+        Assertions.assertNotNull(restClient, "The Client should not be null");
+    }
+
+    @Test
+    void serverRestClient(@ServerResource final Client client) {
+        Assertions.assertNotNull(client, "The ServerManager parameter should not be null");
+    }
+
+    @Test
+    void staticHttpClient() {
+        Assertions.assertNotNull(staticHttpClient, "The static Client should not be null");
+    }
+
+    @Test
+    void httpClient() {
+        Assertions.assertNotNull(httpClient, "The Client should not be null");
+    }
+
+    @Test
+    void serverHttpClient(@ServerResource final HttpClient client) {
+        Assertions.assertNotNull(client, "The ServerManager parameter should not be null");
+    }
+
+    @Test
+    void staticBaseWebTarget() {
+        Assertions.assertNotNull(staticBaseWebTarget, "The static WebTarget should not be null");
+        Assertions.assertEquals(URI.create("http://localhost:8080"), staticBaseWebTarget.getUri());
+    }
+
+    @Test
+    void baseWebTarget() {
+        Assertions.assertNotNull(baseWebTarget, "The WebTarget should not be null");
+        Assertions.assertEquals(URI.create("http://localhost:8080"), baseWebTarget.getUri());
+    }
+
+    @Test
+    void baseWebTargetParameter(@ServerResource final WebTarget baseWebTarget) {
+        Assertions.assertNotNull(baseWebTarget, "The WebTarget parameter should not be null");
+        Assertions.assertEquals(URI.create("http://localhost:8080"), baseWebTarget.getUri());
+    }
+
+    @Test
+    void staticTestWebTarget() {
+        Assertions.assertNotNull(staticTestWebTarget, "The static WebTarget should not be null");
+        Assertions.assertEquals(URI.create("http://localhost:8080/test"), staticTestWebTarget.getUri());
+    }
+
+    @Test
+    void testWebTarget() {
+        Assertions.assertNotNull(testWebTarget, "The WebTarget should not be null");
+        Assertions.assertEquals(URI.create("http://localhost:8080/test"), testWebTarget.getUri());
+    }
+
+    @Test
+    void testWebTargetParameter(@ServerResource @RequestPath("test") final WebTarget testWebTarget) {
+        Assertions.assertNotNull(testWebTarget, "The WebTarget parameter should not be null");
+        Assertions.assertEquals(URI.create("http://localhost:8080/test"), testWebTarget.getUri());
     }
 }

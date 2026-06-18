@@ -44,8 +44,7 @@ public class StandaloneDeploymentIT {
     }
 
     @Test
-    public void checkResponse() throws Exception {
-        final HttpClient client = HttpClient.newHttpClient();
+    public void checkResponse(@ServerResource final HttpClient client) throws Exception {
         final HttpRequest request = HttpRequest.newBuilder(uri)
                 .GET()
                 .build();
