@@ -25,6 +25,7 @@ import org.wildfly.testing.tools.xml.CloseableXMLStreamWriter;
  * module when the JVM exits. This typically happens on Windows as the module loader holds a lock on the resources.
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
+ * @since 1.0.0
  */
 @SuppressWarnings("unused")
 public final class ModuleDescription implements AutoCloseable, Comparable<ModuleDescription> {

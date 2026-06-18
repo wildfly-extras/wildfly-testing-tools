@@ -20,6 +20,7 @@ import org.wildfly.testing.junit.condition.RequiresModuleExecutionCondition;
  * Only one of the conditions needs to be {@code true} for this to enable tests.
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
+ * @since 1.0.0
  * @see RequiresModule
  */
 @Inherited

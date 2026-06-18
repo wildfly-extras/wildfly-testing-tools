@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * The configuration settings for the server.
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
+ * @since 1.0.0
  */
 public class ServerConfiguration {
 

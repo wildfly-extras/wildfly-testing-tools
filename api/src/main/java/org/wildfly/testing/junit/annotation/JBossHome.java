@@ -20,6 +20,7 @@ import org.wildfly.testing.junit.condition.JBossHomeParameterResolver;
  * {@link java.io.File} or {@link String}.
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
+ * @since 1.0.0
  */
 @Inherited
 @Documented

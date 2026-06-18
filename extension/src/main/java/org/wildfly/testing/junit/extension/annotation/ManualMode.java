@@ -22,6 +22,7 @@ import org.wildfly.plugin.tools.server.ServerManager;
  * Manual mode tests are automatically tagged with {@code "wildfly-manual"} to allow selective test execution.
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
+ * @since 1.0.0
  */
 @Inherited
 @Documented
