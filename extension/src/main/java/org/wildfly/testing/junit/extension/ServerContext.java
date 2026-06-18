@@ -38,6 +38,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.wildfly.plugin.tools.server.Configuration;
 import org.wildfly.plugin.tools.server.ServerManager;
+import org.wildfly.plugin.tools.server.ServerManagerListener;
 import org.wildfly.testing.junit.extension.annotation.WildFlyDomainTest;
 import org.wildfly.testing.junit.extension.api.DomainConfigurationFactory;
 import org.wildfly.testing.junit.extension.api.ServerConfiguration;
@@ -118,16 +119,6 @@ class ServerContext {
                 HttpClient.class);
     }
 
-    /**
-     * Shuts down the servers context.
-     *
-     * @param context the context used to lookup the resources on
-     */
-    static void shutdownContext(final ExtensionContext context) {
-        removeClient(context);
-        removeHttpClient(context);
-    }
-
     private static void removeClient(final ExtensionContext context) {
         final Store store = getGlobalStore(context);
         final Client client = store.remove(CLIENT_KEY, Client.class);
@@ -168,6 +159,7 @@ class ServerContext {
         return context.getRoot().getStore(ExtensionContext.StoreScope.LAUNCHER_SESSION, SERVER_NAMESPACE);
     }
 
+    @SuppressWarnings("resource")
     private static ServerManager createServer(final ExtensionContext context) {
         // Determine configuration based on launch type
         final Class<?> testClass = context.getRequiredTestClass();
@@ -182,7 +174,13 @@ class ServerContext {
             configuration = StandaloneConfigurationFactory.create()
                     .configuration(context);
         }
-        return ServerManager.of(configuration);
+        return ServerManager.of(configuration).addServerManagerListener(new ServerManagerListener() {
+            @Override
+            public void beforeShutdown(final ServerManager serverManager) {
+                removeClient(context);
+                removeHttpClient(context);
+            }
+        });
     }
 
     static void stopServer(final ExtensionContext context, final ServerManager serverManager) {
@@ -392,7 +390,7 @@ class ServerContext {
 
         @Override
         public void close() throws Exception {
-            // do nothing,
+            // Do nothing
         }
 
         void internalClose() throws Exception {

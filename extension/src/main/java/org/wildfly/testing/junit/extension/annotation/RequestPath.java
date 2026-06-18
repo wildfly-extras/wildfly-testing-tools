@@ -35,8 +35,7 @@ import java.net.URI;
  *     private URI ordersUri;
  *
  *     &#x40;Test
- *     public void testGetOrders() throws Exception {
- *         HttpClient client = HttpClient.newHttpClient();
+ *     public void testGetOrders(&#x40;ServerResource HttpClient client) throws Exception {
  *         HttpRequest request = HttpRequest.newBuilder(ordersUri).GET().build();
  *         HttpResponse&lt;String&gt; response = client.send(request, HttpResponse.BodyHandlers.ofString());
  *         Assertions.assertEquals(200, response.statusCode());
