@@ -26,4 +26,27 @@ public class ModulesTest {
         Assertions.assertEquals(ModuleEnvironment.BASE_MODULE_DIR, Modules.discoverModulePath(),
                 "Failed to discover the expected module path. The module path should be the first path which is not said to be immutable.");
     }
+
+    @Test
+    public void discoverModulePathWhenNeitherPropertySet() {
+        // Save and clear both properties
+        final String originalModulePath = System.getProperty("module.path");
+        final String originalJBossHome = System.getProperty("jboss.home");
+        try {
+            System.clearProperty("module.path");
+            System.clearProperty("jboss.home");
+
+            final IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class,
+                    Modules::discoverModulePath);
+            Assertions.assertTrue(exception.getMessage().contains("module.path") ||
+                    exception.getMessage().contains("jboss.home"));
+        } finally {
+            if (originalModulePath != null) {
+                System.setProperty("module.path", originalModulePath);
+            }
+            if (originalJBossHome != null) {
+                System.setProperty("jboss.home", originalJBossHome);
+            }
+        }
+    }
 }

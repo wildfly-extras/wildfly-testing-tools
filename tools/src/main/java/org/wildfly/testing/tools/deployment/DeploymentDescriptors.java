@@ -47,6 +47,7 @@ import org.xml.sax.SAXException;
  * A utility to generate various deployment descriptors.
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
+ * @since 1.0.0
  */
 @SuppressWarnings("unused")
 public class DeploymentDescriptors {

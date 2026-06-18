@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * {@link org.wildfly.testing.junit.extension.annotation.ServerResource}.
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
+ * @since 1.0.0
  */
 public interface ServerResourceProducer {
 

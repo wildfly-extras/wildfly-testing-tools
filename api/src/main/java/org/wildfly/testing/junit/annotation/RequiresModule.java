@@ -21,6 +21,7 @@ import org.wildfly.testing.junit.condition.RequiresModuleExecutionCondition;
  * to determine if the modules version is greater than the {@linkplain #minVersion() minimum version}.
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
+ * @since 1.0.0
  */
 @Inherited
 @Documented

@@ -15,6 +15,7 @@ import javax.xml.stream.XMLStreamWriter;
  * A simple {@link XMLStreamWriter} which also implements {@link AutoCloseable}.
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
+ * @since 1.0.0
  */
 public interface CloseableXMLStreamWriter extends AutoCloseable, XMLStreamWriter {
 

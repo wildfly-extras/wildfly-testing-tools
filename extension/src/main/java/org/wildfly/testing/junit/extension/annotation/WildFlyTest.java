@@ -22,6 +22,7 @@ import org.wildfly.testing.junit.extension.WildFlyExtension;
  * Standalone tests are automatically tagged with {@code "wildfly-standalone"} to allow selective test execution.
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
+ * @since 1.0.0
  */
 @Inherited
 @Documented

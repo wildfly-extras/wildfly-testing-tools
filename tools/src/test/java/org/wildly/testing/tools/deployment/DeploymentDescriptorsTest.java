@@ -5,6 +5,7 @@
 
 package org.wildly.testing.tools.deployment;
 
+import java.io.FilePermission;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketPermission;
@@ -18,7 +19,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -220,5 +223,69 @@ public class DeploymentDescriptorsTest {
         }
         xml.append("</permissions>");
         return xml.toString();
+    }
+
+    @Test
+    public void addModuleFilePermissionWithNoModuleJarPath() {
+        // Save and clear the system property
+        final String original = System.getProperty("module.jar.path");
+        try {
+            System.clearProperty("module.jar.path");
+            final Collection<Permission> permissions = DeploymentDescriptors.addModuleFilePermission("org.jboss.logging");
+            Assertions.assertTrue(permissions.isEmpty(), "Expected no permissions when module.jar.path is not set");
+        } finally {
+            if (original != null) {
+                System.setProperty("module.jar.path", original);
+            }
+        }
+    }
+
+    @Test
+    public void addModuleFilePermissionWithBlankModuleJarPath() {
+        // Save and set blank system property
+        final String original = System.getProperty("module.jar.path");
+        try {
+            System.setProperty("module.jar.path", "");
+            final Collection<Permission> permissions = DeploymentDescriptors.addModuleFilePermission("org.jboss.logging");
+            Assertions.assertTrue(permissions.isEmpty(), "Expected no permissions when module.jar.path is blank");
+        } finally {
+            if (original != null) {
+                System.setProperty("module.jar.path", original);
+            } else {
+                System.clearProperty("module.jar.path");
+            }
+        }
+    }
+
+    @Test
+    public void createTempDirPermission() {
+        final Collection<FilePermission> permissions = DeploymentDescriptors.createTempDirPermission("read,write");
+        Assertions.assertNotNull(permissions);
+        Assertions.assertEquals(2, permissions.size());
+
+        final String tempDir = System.getProperty("java.io.tmpdir");
+        Assertions.assertNotNull(tempDir);
+
+        final List<FilePermission> permList = permissions.stream().toList();
+        // First permission should be for the temp dir with "read" action
+        Assertions.assertTrue(permList.get(0).getName().startsWith(tempDir));
+        Assertions.assertEquals("read", permList.get(0).getActions());
+
+        // Second permission should be for all files/subdirs with specified actions
+        Assertions.assertTrue(permList.get(1).getName().endsWith("-"));
+        Assertions.assertEquals("read,write", permList.get(1).getActions());
+    }
+
+    @Test
+    public void addJBossDeploymentStructureMethod() {
+        // Test the convenience method that takes Archive directly
+        final WebArchive archive = ShrinkWrap.create(WebArchive.class);
+
+        final Set<String> addedModules = Set.of("org.jboss.logging");
+        final WebArchive result = DeploymentDescriptors
+                .addJBossDeploymentStructure(archive, addedModules, Set.of());
+
+        Assertions.assertNotNull(result);
+        Assertions.assertTrue(result.contains("WEB-INF/jboss-deployment-structure.xml"));
     }
 }

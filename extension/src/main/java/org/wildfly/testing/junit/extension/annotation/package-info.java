@@ -55,8 +55,7 @@
  *         }
  *
  *         @Test
- *         public void testHello(@ServerResource URI uri) throws Exception {
- *             HttpClient client = HttpClient.newHttpClient();
+ *         public void testHello(@ServerResource URI uri, @ServerResource HttpClient client) throws Exception {
  *             HttpRequest request = HttpRequest.newBuilder(uri.resolve("hello")).build();
  *             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
  *             Assertions.assertEquals(200, response.statusCode());

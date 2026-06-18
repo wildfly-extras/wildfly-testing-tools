@@ -24,6 +24,7 @@ import javax.xml.stream.XMLStreamWriter;
  * </p>
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
+ * @since 1.0.0
  */
 class IndentingXmlWriter implements CloseableXMLStreamWriter, XMLStreamConstants {
 

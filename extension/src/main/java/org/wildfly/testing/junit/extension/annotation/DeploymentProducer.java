@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
  * </p>
  *
  * @author <a href="mailto:jperkins@ibm.com">James R. Perkins</a>
+ * @since 1.0.0
  */
 @Inherited
 @Documented
