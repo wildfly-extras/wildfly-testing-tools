@@ -279,7 +279,6 @@ public class WildFlyExtension implements BeforeAllCallback, AfterAllCallback {
                 return;
             }
             undeploy(context, serverManager, deploymentInfo.get());
-            ServerContext.shutdownContext(context);
         }
 
         @Override
