@@ -22,7 +22,7 @@
         <version.org.jboss.logging.jboss-logging>3.6.3.Final</version.org.jboss.logging.jboss-logging>
         <version.org.jboss.resteasy>6.2.17.Final</version.org.jboss.resteasy>
         <version.org.jboss.shrinkwrap.shrinkwrap>1.2.6</version.org.jboss.shrinkwrap.shrinkwrap>
-        <version.org.jsoup>1.23.1</version.org.jsoup>
+        <version.org.jsoup>1.23.2</version.org.jsoup>
         <version.org.wildfly.launcher>1.0.2.Final</version.org.wildfly.launcher>
         <version.org.wildfly.plugin.tools>2.0.0.Final</version.org.wildfly.plugin.tools>
     </properties>
